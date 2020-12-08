@@ -19,30 +19,19 @@ services:
     image: andreper/spark-master:2.4.4-hadoop-2.7
     container_name: spark-master
     ports:
-      - 8080:8080
+      - 2024:8080
       - 7077:7077
     volumes:
       - shared-workspace:/opt/workspace
-  spark-worker-1:
+  spark-worker:
     image: andreper/spark-worker:2.4.4-hadoop-2.7
-    container_name: spark-worker-1
+    deploy:
+      replicas: 3
     environment:
       - SPARK_WORKER_CORES=1
       - SPARK_WORKER_MEMORY=512m
     ports:
-      - 8081:8081
-    volumes:
-      - shared-workspace:/opt/workspace
-    depends_on:
-      - spark-master
-  spark-worker-2:
-    image: andreper/spark-worker:2.4.4-hadoop-2.7
-    container_name: spark-worker-2
-    environment:
-      - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_MEMORY=512m
-    ports:
-      - 8082:8081
+      - 8081-8083:8081
     volumes:
       - shared-workspace:/opt/workspace
     depends_on:
