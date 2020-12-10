@@ -1,0 +1,40 @@
+---
+# ------------------------------------------------------------------------------------
+# -- Docs: https://github.com/andre-marcos-perez/spark-standalone-cluster-on-docker --
+# ------------------------------------------------------------------------------------
+# Spark Standalone Cluster for Nutanix Resource Production
+version: "3.6"
+volumes:
+  shared-workspace:
+    name: "hadoop-distributed-file-system"
+    driver: local
+services:
+  jupyterlab:
+    image: andreper/jupyterlab:2.1.4-spark-2.4.4
+    container_name: jupyterlab
+    ports:
+      - 8888:8888
+    volumes:
+      - shared-workspace:/opt/workspace
+  spark-master:
+    image: andreper/spark-master:2.4.4-hadoop-2.7
+    container_name: spark-master
+    ports:
+      - 8080:8080
+      - 7077:7077
+    volumes:
+      - shared-workspace:/opt/workspace
+  spark-worker:
+    image: andreper/spark-worker:2.4.4-hadoop-2.7
+    deploy:
+      replicas: 8
+    environment:
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=5G
+    ports:
+      - 8081-8088:8081
+    volumes:
+      - shared-workspace:/opt/workspace
+    depends_on:
+      - spark-master
+...
