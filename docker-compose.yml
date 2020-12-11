@@ -16,15 +16,16 @@ services:
     volumes:
       - shared-workspace:/opt/workspace
   spark-master:
-    image: andreper/spark-master:2.4.4-hadoop-2.7
+    image: spark-29cm-master:spark-2.4.4-hadoop-2.7
     container_name: spark-master
     ports:
-      - 2024:8080
+      - 8080:8080
       - 7077:7077
     volumes:
       - shared-workspace:/opt/workspace
   spark-worker:
-    image: andreper/spark-worker:2.4.4-hadoop-2.7
+    image: spark-29cm-worker:spark-2.4.4-hadoop-2.7
+    restart: always
     deploy:
       replicas: 3
     environment:
